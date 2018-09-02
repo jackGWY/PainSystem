@@ -214,8 +214,17 @@
                   {% endfor %}
                 </td>
               </tr>
-
-
+              {% if kegg_drug_info_tuple[5] == "None"%}
+              <tr>
+                <th>target of kegg</th>
+                <td>None</td>
+              </tr>
+              {% else %}
+              <tr>
+                <th>target of kegg</th>
+                <td><a href="keggTarget?Target_href={{kegg_drug_info_tuple[5]}}">kegg target</a></td>
+              </tr>
+              {% endif %}
               <tr>
                 <th>External Links </th>
                 <td>

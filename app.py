@@ -133,6 +133,58 @@ def structureMap():
     kegg_drug=cur.fetchone()
     print("kegg_drug_info:",kegg_drug)
     return render_template('structureMap.html',kegg_drug=kegg_drug)
+
+@app.route('/keggTarget',methods=["get"])
+def keggTarget():
+    req=request.args
+    Target_href=req.get("Target_href")
+    print("Target_href:",Target_href)
+    targetInfo=[]
+    conn=getConnection()
+    if Target_href=="None" or Target_href==None:
+        for i in range(20):
+            targetInfo.append("None")
+    else:
+        cur = conn.cursor()
+        sql_target = 'SELECT * FROM kegg_drug_target WHERE Target_href = "%s"' %Target_href
+        cur.execute(sql_target)
+        targetInfo=cur.fetchone()
+    print("targetInfo:",targetInfo)
+    pathwayList=[]
+    if Target_href==None or Target_href=="None":
+        for i in range(20):
+            pathwayList.append("None")
+    else:
+        cur2 = conn.cursor()
+        sql_pathway = 'SELECT * FROM target_pathway WHERE Target_href = "%s"' %Target_href
+        cur2.execute(sql_pathway)
+        pathwayList=cur2.fetchall()
+
+    return render_template('targetInfo.html',targetInfo=targetInfo,pathwayList=pathwayList)
+
+@app.route('/pathwayInfo',methods=["get"])
+def pathwayInfo():
+    req=request.args
+    pathwayHsa=req.get("pathwayHsa")
+    print("pathwayHsa:",pathwayHsa)
+    conn=getConnection()
+    pathwayHsaInfo=[]
+    if pathwayHsa!=None and pathwayHsa!="None":
+        cur = conn.cursor()
+        sql_target = 'SELECT * FROM target_pathway WHERE kegg_target_hsa = "%s"' %pathwayHsa
+        cur.execute(sql_target)
+        pathwayHsaInfo=cur.fetchone()
+    return render_template('pathwayHsaInfo.html',pathwayHsaInfo=pathwayHsaInfo)
+
+@app.route('/pathway')
+def pathway():
+    conn=getConnection()
+    cur = conn.cursor()
+    sql_target = 'SELECT * FROM target_pathway'
+    cur.execute(sql_target)
+    pathwayHsaList=cur.fetchall()
+    return render_template('pathwayHsaList.html',pathwayHsaList=pathwayHsaList)
+    
 if __name__ == '__main__':
     #getDrugList()
     app.run(port=5009)
