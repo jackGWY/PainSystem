@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}pain{% endblock %}
+
+{% block page_content %}
+    <table class="table table-bordered">
+    <tr>
+        <th>KEGG_ENTRY</th>
+        <th>name</th>
+        <th>description</th>
+        <th>category</th>
+        
+    </tr>
+        {% for i in u %}
+            {% for j in i%}
+            <tr>
+                <td>{{ j[0] }}</td>
+                <td>{{ j[1] }}</td>
+                <td>{{ j[2] }}</td>
+                <td>{{ j[3] }}</td>
+                
+            </tr>
+            {% endfor %}
+    {% endfor %}
+    </table>
+
+{% endblock %}

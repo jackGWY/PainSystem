@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}pain{% endblock %}
+
+{% block page_content %}
+    <table class="table table-bordered">
+    <tr>
+        <th>KEGG_ENTRY</th>
+        <th>name</th>
+        <th>description</th>
+        <th>category</th>
+        
+    </tr>
+        {% for i in u %}
+            <tr>
+                <td>{{ i[0] }}</td>
+                <td>{{ i[1] }}</td>
+                <td>{{ i[2] }}</td>
+                <td>{{ i[3] }}</td>
+                
+            </tr>
+    	{% endfor %}
+    </table>
+    <br/>
+
+     	{% for j in u4 %}
+            
+           <ul>
+        <li>pubmend_id <br/> 
+             <a href= {{j[6]}}> {{j[0]}} </a>
+        </li>
+        <li>title <br/>  <a href={{j[6]}}> {{j[1]}} </a> </li>
+        <li>background <br/>  {{j[2]}} </li>
+        <li>methods <br/>  {{j[3]}} </li>
+        <li>results <br/>  {{j[4]}} </li>
+        <li>conclusions <br/>  {{j[5]}} </li>
+        <li>url  <br/>  {{j[6]}} </li>
+
+        </ul>
+        <br/>
+            
+    	{% endfor %}
+   
+
+{% endblock %}

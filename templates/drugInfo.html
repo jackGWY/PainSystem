@@ -1,0 +1,269 @@
+{% extends "base.html" %}
+
+{% block title %}pain{% endblock %}
+
+
+{% block page_content %}
+
+    <style type="text/css">
+       /* gridtable */
+       table.gridtable {
+           font-family: verdana,arial,sans-serif;
+           font-size:11px;
+           color:#333333;
+           border-width: 1px;
+          border-color: #666666;
+          border-collapse: collapse;
+      }
+      table.gridtable th {
+          border-width: 1px;
+          padding: 8px;
+          border-style: solid;
+          border-color: #666666;
+         background-color: #dedede;
+      }
+      table.gridtable td {
+          border-width: 1px;
+          padding: 8px;
+          border-style: solid;
+          border-color: #666666;
+          background-color: #ffffff;
+      }
+      /* /gridtable */
+  
+      /* imagetable */
+      table.imagetable {
+          font-family: verdana,arial,sans-serif;
+          font-size:11px;
+          color:#333333;
+          border-width: 1px;
+          border-color: #999999;
+          border-collapse: collapse;
+      }
+      table.imagetable th {
+          background:#b5cfd2 url('cell-blue.jpg');
+          border-width: 1px;
+          padding: 8px;
+          border-style: solid;
+          border-color: #999999;
+      }
+      table.imagetable td {
+          background:#dcddc0 url('cell-grey.jpg');
+          border-width: 1px;
+          padding: 8px;
+          border-style: solid;
+          border-color: #999999;
+      }
+      /* /imagetable */
+      /* altrowstable */
+  
+      table.altrowstable {
+          font-family: verdana,arial,sans-serif;
+          font-size:11px;
+          color:#333333;
+          border-width: 1px;
+          border-color: #a9c6c9;
+          border-collapse: collapse;
+      }
+      table.altrowstable th {
+          border-width: 1px;
+          padding: 8px;
+          border-style: solid;
+          border-color: #a9c6c9;
+      }
+      table.altrowstable td {
+          border-width: 1px;
+          padding: 8px;
+          border-style: solid;
+          border-color: #a9c6c9;
+      }
+      .oddrowcolor{
+          background-color:#d4e3e5;
+      }
+      .evenrowcolor{
+          background-color:#c3dde0;
+      }
+      /* /altrowstable */
+  
+      /* hovertable */
+      table.hovertable {
+          font-family: verdana,arial,sans-serif;
+          font-size:11px;
+          color:#333333;
+          border-width: 1px;
+          border-color: #999999;
+          border-collapse: collapse;
+      }
+      table.hovertable th {
+          background-color:#c3dde0;
+          border-width: 1px;
+          padding: 8px;
+          border-style: solid;
+         border-color: #a9c6c9;
+     }
+     table.hovertable tr {
+         background-color:#d4e3e5;
+     }
+     table.hovertable td {
+         border-width: 1px;
+         padding: 8px;
+         border-style: solid;
+         border-color: #a9c6c9;
+     }
+     /* /hovertable */
+ 
+     </style>
+
+    <div>
+        
+        <div>
+          <div>drug</div>
+          <div>
+            <h3>{{drugbank_info_tuple[0]}}</h3>
+            <table class="gridtable">
+              <tr>
+                <th>Accession Number</th>
+                <td>{{drugbank_info_tuple[1]}}</td>
+              </tr>
+              <tr>
+                <th>Type </th>
+                <td>{{drugbank_info_tuple[2]}}</td>
+              </tr>
+              <tr>
+                <th>Groups </th>
+                <td>{{drugbank_info_tuple[3]}}</td>
+              </tr>
+              <tr>
+                <th>Description </th>
+                <td>{{drugbank_info_tuple[4]}}</td>
+              </tr>
+              <tr>
+                <th>Structure </th>
+                <td>
+                  <img src="/static/pic_kegg_structure/{{kegg_drug_info_tuple[4]}}">
+                </td>
+               
+              </tr>
+              <tr>
+                <th>CAS number  </th>
+                <td>{{drugbank_info_tuple[6]}}</td>
+              </tr>
+              </tr>
+              <tr>
+                <th>Weight </th>
+                <td>{{drugbank_info_tuple[7]}}</td>
+              </tr>
+              <tr>
+                <th>Formula</th>
+                <td>{{kegg_drug_info_tuple[2]}}</td>
+              </tr>
+              {% if kegg_drug_info_tuple[12] == "None" %}
+                <tr>
+                  <th>Structure map</th>
+                  <td>None</td>
+                </tr>
+              {% else %}
+              <tr>
+                <th>Structure map</th>
+                <td><a href="structureMap?structureMapName={{kegg_drug_info_tuple[12]}}">{{kegg_drug_info_tuple[12]}}</a></td>
+              </tr>
+              {% endif %}
+              <tr>
+                <th>pathways</th>
+                <td>
+                  <table>
+                    <tr>
+                      <th>pathway name</th>
+                    </tr>
+                    {% for pathway in pathways %}
+                        <tr>
+                          <td><a href="{{pathway[1]}}">{{pathway[0]}}</a></td>
+                        </tr>
+                    {% endfor %}
+                  </table>
+                </td>
+              </tr>
+
+              <tr>
+                <th>targets</th>
+                <td>
+                  {% for target in drugbank_target %}
+                  <table>
+                    <tr>
+                      <th>{{target[0]}}</th>
+                    </tr>
+                    <tr>
+                      <td>Kind</td> <td>{{target[1]}}</td>
+                    </tr>
+                    <tr>
+                      <td>Organism </td> <td>{{target[2]}}</td>
+                    </tr>
+                    <tr>
+                      <td>General Function </td> <td>{{target[3]}}</td>
+                    </tr>
+                    <tr>
+                      <td>Specific Function</td> <td>{{target[4]}}</td>
+                    </tr>
+                    <tr>
+                      <td>Gene Name </td> <td>{{target[5]}}</td>
+                    </tr>
+                    <tr>
+                      <td>Molecular Weight </td> <td>{{target[6]}}</td>
+                    </tr>
+                  </table>
+                  {% endfor %}
+                </td>
+              </tr>
+
+
+              <tr>
+                <th>External Links </th>
+                <td>
+                  <table>
+                    <tr>
+                      <th>Resource</th> <th>Link</th>
+                    </tr>
+                    <tr>
+                      <td>DrugBank</td> <td>None</td>
+                    </tr>
+                    <tr>
+                      <td>KeggDrug</td> <td><a href="{{drugbank_info_tuple[11]}}">{{drugbank_info_tuple[11]}}</a></td>
+                    </tr> 
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+    </div>
+<script LANGUAGE="JavaScript">
+document.getElementById('structure').setAttribute("src","/static/pic_kegg_structure/"+{{kegg_drug_info_tuple[4]}});
+</script>
+
+    <script language="text/javascript">
+var adres="/static/pic_kegg_structure/"+{{kegg_drug_info_tuple[4]}};
+document.getElementById('imgInit').src = adres;
+ 
+    </script>
+    <script type="text/javascript">
+     function altRows(id){
+         if(document.getElementsByTagName){
+ 
+             var table = document.getElementById(id);
+             var rows = table.getElementsByTagName("tr");
+ 
+             for(i = 0; i < rows.length; i++){
+                 if(i % 2 == 0){
+                     rows[i].className = "evenrowcolor";
+                 }else{
+                     rows[i].className = "oddrowcolor";
+                 }
+             }
+         }
+     }
+ 
+     window.onload=function(){
+         altRows('alternatecolor');
+     }
+ </script>
+{% endblock %}
