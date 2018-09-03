@@ -117,7 +117,7 @@
     <div>
         
         <div>
-          <div>drug</div>
+          <h3>drug</h3>
           <div>
             <h3>{{drugbank_info_tuple[0]}}</h3>
             <table class="gridtable">
@@ -189,9 +189,9 @@
                 <td>
                   {% for target in drugbank_target %}
                   <table>
-                    <tr>
+                    
                       <th>{{target[0]}}</th>
-                    </tr>
+                    
                     <tr>
                       <td>Kind</td> <td>{{target[1]}}</td>
                     </tr>
@@ -214,6 +214,29 @@
                   {% endfor %}
                 </td>
               </tr>
+              <tr>
+                <th>side effects</th>
+                <td>
+                  <ul>
+                    {% if sideeffects==None%}
+                      <li>None</li>
+                    {% else %}
+                      {% for side in sideeffects%}
+                        <li><a href="sideInfo?sideName={{side[1]}}">{{side[1]}}</a></li>
+                      {%endfor%}
+                    {%endif%}
+                  </ul>
+                </td>
+              </tr>
+              <tr>
+                <th>pathway map of kegg</th>
+                {% if kegg_drug_info_tuple[8] == "None" %}
+                  <td>None</td>
+                {% else %}
+                <td><a href="pathwayMapOfKegg?picName={{kegg_drug_info_tuple[10]}}">{{kegg_drug_info_tuple[8]}}</a></td>
+                {%endif%}
+              </tr>
+
               {% if kegg_drug_info_tuple[5] == "None"%}
               <tr>
                 <th>target of kegg</th>

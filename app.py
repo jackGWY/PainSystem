@@ -79,11 +79,21 @@ def drugInfo():
     sql_target="SELECT * FROM drugbank_target WHERE drugbank_id = '%s'" %drugbank_id
     cur_target.execute(sql_target)
     drugbank_target=cur_target.fetchall()
+    ####
+    cur_sideefect=conn.cursor()
+    sql_sideeffects='SELECT * FROM sider_effect WHERE sideeffect_link IN (SELECT sideeffect_link FROM sideeffect_of_sider_drug WHERE sider_drug_link IN (SELECT sider_drug_link FROM siderdrug_drugbank WHERE drugbank_id = "%s" ))'%drugbank_id
+    cur_sideefect.execute(sql_sideeffects)
+    sideeffects=cur_sideefect.fetchall()
+    #####
+    # cur_kegg_pathway=conn.cursor()
+    # sql_kegg_pathway=''
+    print("sideeffects:",sideeffects)
     print("drugbank_target:",drugbank_target)
     print("img.........................:",kegg_drug_info_tuple[4])
     print("structureMapName:",kegg_drug_info_tuple[12])
     return render_template('drugInfo.html',drugbank_info_tuple=drugbank_info_tuple
-        ,kegg_drug_info_tuple=kegg_drug_info_tuple,pathways=pathways,drugbank_target=drugbank_target)
+        ,kegg_drug_info_tuple=kegg_drug_info_tuple,pathways=pathways,
+        drugbank_target=drugbank_target,sideeffects=sideeffects)
 
 @app.route('/sideeffects')
 def sideeffects():
@@ -184,7 +194,38 @@ def pathway():
     cur.execute(sql_target)
     pathwayHsaList=cur.fetchall()
     return render_template('pathwayHsaList.html',pathwayHsaList=pathwayHsaList)
-    
+
+@app.route('/pathwayMapOfKegg',methods=["get"])
+def pathwayMapOfKegg():
+    req=request.args
+    picName=req.get("picName")
+    print("picName:",picName)
+    return render_template('pathwayMapOfKegg.html',picName=picName)
+
+@app.route('/targets')
+def targets():
+    conn=getConnection()
+    cur = conn.cursor()
+    sql_target = 'SELECT * FROM drugbank_target'
+    cur.execute(sql_target)
+    drugbankTargetList=cur.fetchall()
+    return render_template('drugbankTarget.html',drugbankTargetList=drugbankTargetList)
+
+@app.route('/drugbankTargetInfo',methods=["get"])
+def drugbankTargetInfo():
+    req=request.args
+    drugbankTarget=req.get("drugbankTarget")
+    print("drugbankTarget:",drugbankTarget)
+    conn=getConnection()
+    cur = conn.cursor()
+    sql_target = 'SELECT * FROM drugbank_target WHERE target_name = "%s"' %drugbankTarget
+    cur.execute(sql_target)
+    drugbankTargetInfo=cur.fetchone()
+    return render_template('drugbankTargetInfo.html',drugbankTargetInfo=drugbankTargetInfo)
+
+@app.route('/pai')
+def pai():
+    return render_template('pai.html')
 if __name__ == '__main__':
     #getDrugList()
     app.run(port=5009)
