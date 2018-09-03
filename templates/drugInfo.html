@@ -185,36 +185,6 @@
               </tr>
 
               <tr>
-                <th>targets</th>
-                <td>
-                  {% for target in drugbank_target %}
-                  <table>
-                    
-                      <th>{{target[0]}}</th>
-                    
-                    <tr>
-                      <td>Kind</td> <td>{{target[1]}}</td>
-                    </tr>
-                    <tr>
-                      <td>Organism </td> <td>{{target[2]}}</td>
-                    </tr>
-                    <tr>
-                      <td>General Function </td> <td>{{target[3]}}</td>
-                    </tr>
-                    <tr>
-                      <td>Specific Function</td> <td>{{target[4]}}</td>
-                    </tr>
-                    <tr>
-                      <td>Gene Name </td> <td>{{target[5]}}</td>
-                    </tr>
-                    <tr>
-                      <td>Molecular Weight </td> <td>{{target[6]}}</td>
-                    </tr>
-                  </table>
-                  {% endfor %}
-                </td>
-              </tr>
-              <tr>
                 <th>side effects</th>
                 <td>
                   <ul>
@@ -248,6 +218,46 @@
                 <td><a href="keggTarget?Target_href={{kegg_drug_info_tuple[5]}}">kegg target</a></td>
               </tr>
               {% endif %}
+
+              <tr>
+                <th>targets</th>
+                <td>
+                  {% for target in drugbank_target %}
+                  <table>
+                    
+                      <th>{{target[0]}}</th>
+                    
+                    <tr>
+                      <td>Kind</td> <td>{{target[1]}}</td>
+                    </tr>
+                    <tr>
+                      <td>Organism </td> <td>{{target[2]}}</td>
+                    </tr>
+                    <tr>
+                      <td>General Function </td> <td>{{target[3]}}</td>
+                    </tr>
+                    <tr>
+                      <td>Specific Function</td> <td>{{target[4]}}</td>
+                    </tr>
+                    <tr>
+                      <td>Gene Name </td> <td>{{target[5]}}</td>
+                    </tr>
+                    <tr>
+                      <td>Molecular Weight </td> <td>{{target[6]}}</td>
+                    </tr>
+                    <tr>
+                      <td>Gene sequence</td> <td>{{target[8]}}</td>
+                    </tr>
+                  </table>
+                  {% endfor %}
+                </td>
+              </tr>
+              
+
+              <tr>
+                      <th>KEGG Entry</th> <td>{{drugbank_info_tuple[10]}}</td>
+              </tr>
+
               <tr>
                 <th>External Links </th>
                 <td>
@@ -255,12 +265,19 @@
                     <tr>
                       <th>Resource</th> <th>Link</th>
                     </tr>
+
+
                     <tr>
-                      <td>DrugBank</td> <td>None</td>
+                      <td>DrugBank</td> <td><a href="{{drugbank_info_tuple[12]}}">{{drugbank_info_tuple[12]}}</a></td>
                     </tr>
+
                     <tr>
-                      <td>KeggDrug</td> <td><a href="{{drugbank_info_tuple[11]}}">{{drugbank_info_tuple[11]}}</a></td>
+                      <td>Kegg Drug</td> <td><a href="{{drugbank_info_tuple[11]}}">{{drugbank_info_tuple[11]}}</a></td>
                     </tr> 
+
+              <!--       <tr>
+                      <td></td>
+                    </tr> -->
                   </table>
                 </td>
               </tr>

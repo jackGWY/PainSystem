@@ -1,5 +1,6 @@
 from flask import Flask
 from flask import render_template
+from flask import redirect, url_for
 from flask_bootstrap import Bootstrap
 from flask import request
 import pymysql
@@ -38,7 +39,7 @@ def drug():
     #print("drug_info_list:",drug_info_list)
     return render_template('drug.html',drug_info_list=drug_info_list)
 
-@app.route('/drugInfo',methods=["get"])
+@app.route('/drugInfo',methods=["get","post"])
 def drugInfo():
     req=request.args
     drugbank_id=req.get("drugbank_id")
@@ -50,12 +51,7 @@ def drugInfo():
     cur.execute(sql_drug)
     drugbank_info_tuple=cur.fetchone()
     print("drugbank_info_tuple:",drugbank_info_tuple)
-    #drugbank_kegg联系表 获取kegg_id
-    # cur2 = conn.cursor()
-    # sql_kegg_drugbank = 'SELECT * FROM drugbank_keggdrug WHERE drugbank_id = "%s"' %drugbank_id
-    # cur2.execute(sql_kegg_drugbank)
-    # kegg_drugbank_info_tuple=cur2.fetchone()
-    # print("kegg_drugbank_info_tuple:",kegg_drugbank_info_tuple)
+ 
     kegg_id=drugbank_info_tuple[10]
     print("kegg_id:",kegg_id)
     #根据keggid获取kegg表数据
@@ -226,6 +222,104 @@ def drugbankTargetInfo():
 @app.route('/pai')
 def pai():
     return render_template('pai.html')
+
+@app.route('/drugbankInfomation?drugbank_id=<drugbank_id>')
+def drugbankInfomation(drugbank_id):
+    #drugbank_id=drugbank_id
+    print("drugbank_id:",drugbank_id)
+    conn=getConnection()
+    cur = conn.cursor()
+    sql_drug = "SELECT * FROM drugbank WHERE drugbank_id = '%s'" %drugbank_id
+    cur.execute(sql_drug)
+    drugbank_info_tuple=cur.fetchone()
+    print("drugbank_info_tuple:",drugbank_info_tuple)
+ 
+    kegg_id=drugbank_info_tuple[10]
+    print("kegg_id:",kegg_id)
+    #根据keggid获取kegg表数据
+    cur3 = conn.cursor()
+    sql_kegg_drug = "SELECT * FROM kegg_drug WHERE kegg_id = '%s'" %kegg_id
+    cur3.execute(sql_kegg_drug)
+    kegg_drug_info_tuple=cur3.fetchone()
+    print("kegg_drug_info_tuple:",kegg_drug_info_tuple)
+    if kegg_drug_info_tuple==None:
+        kegg_drug_info_tuple=[]
+        for item_i in range(21):
+            kegg_drug_info_tuple.append("None")
+    #查询pathway
+    cur_pathway=conn.cursor()
+    sql_pathway="SELECT * FROM pathway_table WHERE drugbank_id = '%s'" %drugbank_id
+    cur_pathway.execute(sql_pathway)
+    pathways=cur_pathway.fetchall()
+    print("pathways:",pathways)
+    #查询drugbank target
+    cur_target=conn.cursor()
+    sql_target="SELECT * FROM drugbank_target WHERE drugbank_id = '%s'" %drugbank_id
+    cur_target.execute(sql_target)
+    drugbank_target=cur_target.fetchall()
+    ####
+    cur_sideefect=conn.cursor()
+    sql_sideeffects='SELECT * FROM sider_effect WHERE sideeffect_link IN (SELECT sideeffect_link FROM sideeffect_of_sider_drug WHERE sider_drug_link IN (SELECT sider_drug_link FROM siderdrug_drugbank WHERE drugbank_id = "%s" ))'%drugbank_id
+    cur_sideefect.execute(sql_sideeffects)
+    sideeffects=cur_sideefect.fetchall()
+    #####
+    # cur_kegg_pathway=conn.cursor()
+    # sql_kegg_pathway=''
+    print("sideeffects:",sideeffects)
+    print("drugbank_target:",drugbank_target)
+    print("img.........................:",kegg_drug_info_tuple[4])
+    print("structureMapName:",kegg_drug_info_tuple[12])
+    return render_template('drugInfo.html',drugbank_info_tuple=drugbank_info_tuple
+        ,kegg_drug_info_tuple=kegg_drug_info_tuple,pathways=pathways,
+        drugbank_target=drugbank_target,sideeffects=sideeffects)
+
+
+@app.route('/search',methods=["post","get"])
+def search():
+    username=request.form.get("username")
+    print("username:",username)
+    conn = getConnection()
+    #查drugbank
+    cur_drugbank = conn.cursor()
+    args='%'+username+'%'
+    sql_drugbank="select * from drugbank where drugbank_id LIKE '%s'" %args
+    cur_drugbank.execute(sql_drugbank)
+    drugbankInfo= cur_drugbank.fetchone()
+    print("drugbankInfo:",drugbankInfo)
+    if drugbankInfo != None:
+        drugbank_id=drugbankInfo[1]
+        #return render_template('drugbankInfomation.html',drugbank_id=drugbank_id)
+        return redirect(url_for('drugbankInfomation', drugbank_id=drugbank_id))
+    #drugbank_name 查找
+    cur_drugbank_name = conn.cursor()
+    sql_drugbank_name="select * from drugbank where drugbank_Name LIKE '%s'" %args
+    cur_drugbank_name.execute(sql_drugbank_name)
+    drugbankInfo2= cur_drugbank_name.fetchone()
+    print("drugbankInfo2:",drugbankInfo2)
+    if drugbankInfo2 != None:
+        drugbank_id=drugbankInfo2[1]
+        return redirect(url_for('drugbankInfomation', drugbank_id=drugbank_id))
+    #cas number 查找
+    cur_cas = conn.cursor()
+    sql_cas="select * from drugbank where CAS_number LIKE '%s'" %args
+    cur_cas.execute(sql_cas)
+    drugbankInfo3= cur_cas.fetchone()
+    print("drugbankInfo3:",drugbankInfo3)
+    if drugbankInfo3 != None:
+        drugbank_id=drugbankInfo3[1]
+        return redirect(url_for('drugbankInfomation', drugbank_id=drugbank_id))
+    #kegg id 查找
+    cur_kegg_id = conn.cursor()
+    sql_kegg_id="select * from drugbank where KEGG_Drug LIKE '%s'" %args
+    cur_kegg_id.execute(sql_kegg_id)
+    drugbankInfo4= cur_kegg_id.fetchone()
+    print("drugbankInfo4:",drugbankInfo4)
+    if drugbankInfo4 != None:
+        drugbank_id=drugbankInfo4[1]
+        return redirect(url_for('drugbankInfomation', drugbank_id=drugbank_id))
+    else:
+        return render_template('NotFound.html')
+
 if __name__ == '__main__':
     #getDrugList()
     app.run(port=5009)
