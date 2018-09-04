@@ -273,13 +273,54 @@ def drugbankInfomation(drugbank_id):
         ,kegg_drug_info_tuple=kegg_drug_info_tuple,pathways=pathways,
         drugbank_target=drugbank_target,sideeffects=sideeffects)
 
+@app.route('/searchForSideName?sideName=<sideName>')
+def searchForSideName(sideName):
+    print("sideName:",sideName)
+    conn=getConnection()
+    cur = conn.cursor()
+    sqlSideInfo = 'SELECT * FROM sider_effect WHERE sideeffect_name = "%s"' %sideName
+    cur.execute(sqlSideInfo)
+    SideInfo=cur.fetchone()
+    #SideInfo=list(SideInfo)
+    print("SideInfo:",SideInfo)
+    print("SideInfo[0]:",SideInfo[0])
+    #根据sidereffect_link 查 对应的多种副作用药物
+    cur_drug=conn.cursor()
+    sql_drug="SELECT * FROM sider_to_drug WHERE sideeffect_link='%s'" %SideInfo[0]
+    cur_drug.execute(sql_drug)
+    drugOFsider=cur_drug.fetchall()
+    print("drugOFsider:",drugOFsider)
+    return render_template('sideInfo.html',SideInfo=SideInfo,drugOFsider=drugOFsider)
+
+@app.route('/searchForTargetName?target_name=<target_name>')
+def searchForTargetName(target_name):
+    drugbankTarget=target_name
+    print("drugbankTarget:",drugbankTarget)
+    conn=getConnection()
+    cur = conn.cursor()
+    sql_target = 'SELECT * FROM drugbank_target WHERE target_name = "%s"' %drugbankTarget
+    cur.execute(sql_target)
+    drugbankTargetInfo=cur.fetchone()
+    return render_template('drugbankTargetInfo.html',drugbankTargetInfo=drugbankTargetInfo)
+
+@app.route('/searchForKeggPathway?pathwayHsa=<pathwayHsa>')   
+def searchForKeggPathway(pathwayHsa):
+    print("pathwayHsa:",pathwayHsa)
+    conn=getConnection()
+    pathwayHsaInfo=[]
+    if pathwayHsa!=None and pathwayHsa!="None":
+        cur = conn.cursor()
+        sql_target = 'SELECT * FROM target_pathway WHERE kegg_target_hsa = "%s"' %pathwayHsa
+        cur.execute(sql_target)
+        pathwayHsaInfo=cur.fetchone()
+    return render_template('pathwayHsaInfo.html',pathwayHsaInfo=pathwayHsaInfo)
 
 @app.route('/search',methods=["post","get"])
 def search():
     username=request.form.get("username")
     print("username:",username)
     conn = getConnection()
-    #查drugbank
+    #drugbank_id查drugbank
     cur_drugbank = conn.cursor()
     args='%'+username+'%'
     sql_drugbank="select * from drugbank where drugbank_id LIKE '%s'" %args
@@ -290,7 +331,7 @@ def search():
         drugbank_id=drugbankInfo[1]
         #return render_template('drugbankInfomation.html',drugbank_id=drugbank_id)
         return redirect(url_for('drugbankInfomation', drugbank_id=drugbank_id))
-    #drugbank_name 查找
+    #drugbank_name 查找druginfo
     cur_drugbank_name = conn.cursor()
     sql_drugbank_name="select * from drugbank where drugbank_Name LIKE '%s'" %args
     cur_drugbank_name.execute(sql_drugbank_name)
@@ -299,7 +340,7 @@ def search():
     if drugbankInfo2 != None:
         drugbank_id=drugbankInfo2[1]
         return redirect(url_for('drugbankInfomation', drugbank_id=drugbank_id))
-    #cas number 查找
+    #cas number 查找drugINfo
     cur_cas = conn.cursor()
     sql_cas="select * from drugbank where CAS_number LIKE '%s'" %args
     cur_cas.execute(sql_cas)
@@ -308,7 +349,7 @@ def search():
     if drugbankInfo3 != None:
         drugbank_id=drugbankInfo3[1]
         return redirect(url_for('drugbankInfomation', drugbank_id=drugbank_id))
-    #kegg id 查找
+    #kegg id 查找 drugINfo
     cur_kegg_id = conn.cursor()
     sql_kegg_id="select * from drugbank where KEGG_Drug LIKE '%s'" %args
     cur_kegg_id.execute(sql_kegg_id)
@@ -317,8 +358,63 @@ def search():
     if drugbankInfo4 != None:
         drugbank_id=drugbankInfo4[1]
         return redirect(url_for('drugbankInfomation', drugbank_id=drugbank_id))
+    #sideName 查找 sideInfo
+    cur_side_name = conn.cursor()
+    sql_side_name='select * from sider_effect where sideeffect_name LIKE "%s"' %args
+    cur_side_name.execute(sql_side_name)
+    sideInfo= cur_side_name.fetchone()
+    print("sideInfo:",sideInfo)
+    if sideInfo != None:
+        sideName=sideInfo[1]
+        return redirect(url_for('searchForSideName', sideName=sideName))
+    #sideeffect_id 查找 sideInfo
+    cur_effect_link = conn.cursor()
+    sql_effect_link='select * from sider_effect where sideeffect_link LIKE "%s"' %args
+    cur_effect_link.execute(sql_effect_link)
+    sideInfo2= cur_effect_link.fetchone()
+    print("sideInfo2:",sideInfo2)
+    if sideInfo2 != None:
+        sideName=sideInfo2[1]
+        return redirect(url_for('searchForSideName', sideName=sideName))
+    #target_name 查找 drugbankTargetInfo
+    cur_target_name = conn.cursor()
+    sql_target_name='select * from drugbank_target where target_name LIKE "%s"' %args
+    cur_target_name.execute(sql_target_name)
+    targetInfo2= cur_target_name.fetchone()
+    print("targetInfo2:",targetInfo2)
+    if targetInfo2 != None:
+        target_name=targetInfo2[0]
+        return redirect(url_for('searchForTargetName', target_name=target_name))
+    #Gene_name 查找 drugbankTargetInfo
+    cur_Gene_name = conn.cursor()
+    sql_Gene_name='select * from drugbank_target where Gene_Name LIKE "%s"' %args
+    cur_Gene_name.execute(sql_Gene_name)
+    targetInfo3= cur_Gene_name.fetchone()
+    print("targetInfo3:",targetInfo3)
+    if targetInfo3 != None:
+        target_name=targetInfo3[0]
+        return redirect(url_for('searchForTargetName', target_name=target_name))
+    #searchForKeggPathway 根据kegg_hsa查找pathway
+    cur_kegg_hsa = conn.cursor()
+    sql_kegg_hsa='select * from target_pathway where kegg_target_hsa LIKE "%s"' %args
+    cur_kegg_hsa.execute(sql_kegg_hsa)
+    pathwayInfo= cur_kegg_hsa.fetchone()
+    print("pathwayInfo:",pathwayInfo)
+    if pathwayInfo != None:
+        pathwayHsa=pathwayInfo[0]
+        return redirect(url_for('searchForKeggPathway', pathwayHsa=pathwayHsa))
+    #searchForKeggPathway 根据 kegg_target_pathway_name 查找pathway
+    cur_kegg_target_pathway_name = conn.cursor()
+    sql_kegg_target_pathway_name='select * from target_pathway where kegg_target_pathway_name LIKE "%s"' %args
+    cur_kegg_target_pathway_name.execute(sql_kegg_target_pathway_name)
+    pathwayInfo2= cur_kegg_target_pathway_name.fetchone()
+    print("pathwayInfo2:",pathwayInfo2)
+    if pathwayInfo2 != None:
+        pathwayHsa=pathwayInfo2[0]
+        return redirect(url_for('searchForKeggPathway', pathwayHsa=pathwayHsa))
     else:
         return render_template('NotFound.html')
+
 
 if __name__ == '__main__':
     #getDrugList()
