@@ -165,10 +165,17 @@ def keggTarget():
         sql_pathway = 'SELECT * FROM target_pathway WHERE Target_href = "%s"' %Target_href
         cur2.execute(sql_pathway)
         pathwayList=cur2.fetchall()
-    disease_list = []
-
-
-    return render_template('targetInfo.html',targetInfo=targetInfo,pathwayList=pathwayList)
+    diseaseList = []
+    if Target_href==None or Target_href=="None":
+        for i in range(10):
+            diseaseList=None
+    else:
+        cur_disease = conn.cursor()
+        sql = 'SELECT * FROM target_disease WHERE Target_href = "%s"' %Target_href
+        cur_disease.execute(sql)
+        diseaseList=cur_disease.fetchall()
+    print("diseaseList:",diseaseList)
+    return render_template('targetInfo.html',targetInfo=targetInfo,pathwayList=pathwayList,diseaseList=diseaseList)
 
 @app.route('/pathwayInfo',methods=["get"])
 def pathwayInfo():
@@ -356,6 +363,22 @@ def searchForKeggPathway(pathwayHsa):
         pathwayHsaInfo=cur.fetchone()
     return render_template('pathwayHsaInfo.html',pathwayHsaInfo=pathwayHsaInfo)
 
+@app.route('/searchForKeggDiseaseId?keggDiseaseId=<keggDiseaseId>')
+def searchForKeggDiseaseId(keggDiseaseId):
+    print("keggDiseaseId:",keggDiseaseId)
+    conn=getConnection()
+    cur = conn.cursor()
+    sql = 'SELECT * FROM kegg_disease WHERE kegg_disease_id = "%s"' %keggDiseaseId
+    cur.execute(sql)
+    diseaseInfo=cur.fetchone()
+
+    #查基因信息
+    cur_genen=conn.cursor()
+    sql_gene='SELECT * FROM kegg_disease_gene WHERE kegg_id = "%s"' %keggDiseaseId
+    cur_genen.execute(sql_gene)
+    geneInfoList=cur_genen.fetchall()
+    return render_template('diseaseInfo.html',diseaseInfo=diseaseInfo,geneInfoList=geneInfoList)
+
 @app.route('/search',methods=["post","get"])
 def search():
     username=request.form.get("username")
@@ -453,6 +476,24 @@ def search():
     if pathwayInfo2 != None:
         pathwayHsa=pathwayInfo2[0]
         return redirect(url_for('searchForKeggPathway', pathwayHsa=pathwayHsa))
+    #searchFordisease 根据 kegg_disease_id 查找disease_Info
+    cur_disease_id = conn.cursor()
+    sql_disease_id='select * from kegg_disease where kegg_disease_id LIKE "%s"' %args
+    cur_disease_id.execute(sql_disease_id)
+    diseaseInfo2= cur_disease_id.fetchone()
+    print("diseaseInfo2:",diseaseInfo2)
+    if diseaseInfo2 != None:
+        keggDiseaseId=diseaseInfo2[1]
+        return redirect(url_for('searchForKeggDiseaseId', keggDiseaseId=keggDiseaseId))
+    #searchFordisease 根据 kegg_disease_Name 查找disease_Info
+    cur_disease_name = conn.cursor()
+    sql_disease_name='select * from kegg_disease where kegg_disease_name LIKE "%s"' %args
+    cur_disease_name.execute(sql_disease_name)
+    diseaseInfo3= cur_disease_name.fetchone()
+    print("diseaseInfo3:",diseaseInfo3)
+    if diseaseInfo3 != None:
+        keggDiseaseId=diseaseInfo3[1]
+        return redirect(url_for('searchForKeggDiseaseId', keggDiseaseId=keggDiseaseId))
     else:
         return render_template('NotFound.html')
 

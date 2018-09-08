@@ -157,7 +157,22 @@
               </td>
            {%endif%}
          </tr>
-
+         <tr>
+           <th>Disease</th>
+           {% if diseaseList == None or diseaseList == []%}
+           <td>None</td>
+           {%else%}
+              <td>
+              <ul>
+              {% for disease in diseaseList %}
+                  <li>
+                    <a href="diseaseInfo?keggDiseaseId={{disease[1]}}">{{disease[1]}}</a>
+                  </li>
+              {% endfor %}
+              </ul>
+              </td>
+           {%endif%}
+         </tr>
          <tr>
            <th>External Link</th>
            {% if targetInfo[0] == "None"%}
