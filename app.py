@@ -165,6 +165,8 @@ def keggTarget():
         sql_pathway = 'SELECT * FROM target_pathway WHERE Target_href = "%s"' %Target_href
         cur2.execute(sql_pathway)
         pathwayList=cur2.fetchall()
+    disease_list = []
+
 
     return render_template('targetInfo.html',targetInfo=targetInfo,pathwayList=pathwayList)
 
@@ -218,6 +220,45 @@ def drugbankTargetInfo():
     cur.execute(sql_target)
     drugbankTargetInfo=cur.fetchone()
     return render_template('drugbankTargetInfo.html',drugbankTargetInfo=drugbankTargetInfo)
+@app.route('/Disease')
+def Disease():
+    conn=getConnection()
+    cur = conn.cursor()
+    sql = 'SELECT * FROM kegg_disease'
+    cur.execute(sql)
+    diseaseList=cur.fetchall()
+    return render_template('diseases.html',diseaseList=diseaseList)
+@app.route('/diseaseInfo',methods=["get"])
+
+@app.route('/diseaseInfo',methods=["get"])
+def diseaseInfo():
+    req=request.args
+    keggDiseaseId=req.get("keggDiseaseId")
+    print("keggDiseaseId:",keggDiseaseId)
+    conn=getConnection()
+    cur = conn.cursor()
+    sql = 'SELECT * FROM kegg_disease WHERE kegg_disease_id = "%s"' %keggDiseaseId
+    cur.execute(sql)
+    diseaseInfo=cur.fetchone()
+
+    #查基因信息
+    cur_genen=conn.cursor()
+    sql_gene='SELECT * FROM kegg_disease_gene WHERE kegg_id = "%s"' %keggDiseaseId
+    cur_genen.execute(sql_gene)
+    geneInfoList=cur_genen.fetchall()
+    return render_template('diseaseInfo.html',diseaseInfo=diseaseInfo,geneInfoList=geneInfoList)
+
+@app.route('/diseasePathway',methods=["get"])
+def diseasePathway():
+    req=request.args
+    diseasePathway=req.get("diseasePathway")
+    print("diseasePathway:",diseasePathway)
+    conn=getConnection()
+    cur = conn.cursor()
+    sql = 'SELECT * FROM kegg_disease WHERE kegg_disease_pathway_id = "%s"' %diseasePathway
+    cur.execute(sql)
+    diseasePathwayInfo=cur.fetchone()
+    return render_template('diseasePathwayInfo.html',diseasePathwayInfo=diseasePathwayInfo)
 
 @app.route('/pai')
 def pai():

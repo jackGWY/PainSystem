@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+
+{% block title %}pain{% endblock %}
+
+
+{% block page_content %}
+
+    <style type="text/css">
+       /* gridtable */
+       table.gridtable {
+           font-family: verdana,arial,sans-serif;
+           font-size:11px;
+           color:#333333;
+           border-width: 1px;
+          border-color: #666666;
+          border-collapse: collapse;
+      }
+      table.gridtable th {
+          border-width: 1px;
+          padding: 8px;
+          border-style: solid;
+          border-color: #666666;
+         background-color: #dedede;
+      }
+      table.gridtable td {
+          border-width: 1px;
+          padding: 8px;
+          border-style: solid;
+          border-color: #666666;
+          background-color: #ffffff;
+      }
+      /* /gridtable */
+  
+      /* imagetable */
+      table.imagetable {
+          font-family: verdana,arial,sans-serif;
+          font-size:11px;
+          color:#333333;
+          border-width: 1px;
+          border-color: #999999;
+          border-collapse: collapse;
+      }
+      table.imagetable th {
+          background:#b5cfd2 url('cell-blue.jpg');
+          border-width: 1px;
+          padding: 8px;
+          border-style: solid;
+          border-color: #999999;
+      }
+      table.imagetable td {
+          background:#dcddc0 url('cell-grey.jpg');
+          border-width: 1px;
+          padding: 8px;
+          border-style: solid;
+          border-color: #999999;
+      }
+      /* /imagetable */
+      /* altrowstable */
+  
+      table.altrowstable {
+          font-family: verdana,arial,sans-serif;
+          font-size:11px;
+          color:#333333;
+          border-width: 1px;
+          border-color: #a9c6c9;
+          border-collapse: collapse;
+      }
+      table.altrowstable th {
+          border-width: 1px;
+          padding: 8px;
+          border-style: solid;
+          border-color: #a9c6c9;
+      }
+      table.altrowstable td {
+          border-width: 1px;
+          padding: 8px;
+          border-style: solid;
+          border-color: #a9c6c9;
+      }
+      .oddrowcolor{
+          background-color:#d4e3e5;
+      }
+      .evenrowcolor{
+          background-color:#c3dde0;
+      }
+      /* /altrowstable */
+  
+      /* hovertable */
+      table.hovertable {
+          font-family: verdana,arial,sans-serif;
+          font-size:11px;
+          color:#333333;
+          border-width: 1px;
+          border-color: #999999;
+          border-collapse: collapse;
+      }
+      table.hovertable th {
+          background-color:#c3dde0;
+          border-width: 1px;
+          padding: 8px;
+          border-style: solid;
+         border-color: #a9c6c9;
+     }
+     table.hovertable tr {
+         background-color:#d4e3e5;
+     }
+     table.hovertable td {
+         border-width: 1px;
+         padding: 8px;
+         border-style: solid;
+         border-color: #a9c6c9;
+     }
+     /* /hovertable */
+ 
+     </style>
+
+     <h3>{{diseaseInfo[2]}}</h3>
+    <div>
+        <table class="gridtable">
+            <tr onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+                <th>KEGG Entry</th> <td>{{diseaseInfo[1]}}</td>
+            </tr>
+            <tr onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+                <th>disease name</th> <td>{{diseaseInfo[2]}}</td>
+            </tr>
+            <tr onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+                <th>Description</th> <td>{{diseaseInfo[3]}}</td>
+            </tr>
+            <tr onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+                <th>Category </th> <td>{{diseaseInfo[4]}}</td>
+            </tr>
+
+            {% if diseaseInfo[5] != "None"%}
+            <tr onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+                <th>PATHWAY </th> <td><a href="diseasePathway?diseasePathway={{diseaseInfo[5]}}">{{diseaseInfo[5]}}</a></td>
+            </tr>
+            {%else%}
+            <tr onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+                <th>PATHWAY </th> <td>None</td>
+            </tr>
+            {%endif%}
+
+            {% if geneInfoList != "None"%}
+            <tr onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+                <th>GENE </th>
+                <td>
+                  <div>
+                    <table class="gridtable">
+                        {%for gene in geneInfoList %}
+                          <tr><td>{{gene[0]}}</td></tr>
+                        {%endfor%}
+                    </table>
+                  </div>
+                </td>
+            </tr>
+            {%else%}
+            <tr onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+                <th>GENE </th> <td>None</td>
+            </tr>
+            {%endif%}
+            <tr onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+                <th>External Link</th> <td><a href="{{diseaseInfo[0]}}">{{diseaseInfo[0]}}</a></td>
+            </tr>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+     function altRows(id){
+         if(document.getElementsByTagName){
+ 
+             var table = document.getElementById(id);
+             var rows = table.getElementsByTagName("tr");
+ 
+             for(i = 0; i < rows.length; i++){
+                 if(i % 2 == 0){
+                     rows[i].className = "evenrowcolor";
+                 }else{
+                     rows[i].className = "oddrowcolor";
+                 }
+             }
+         }
+     }
+ 
+     window.onload=function(){
+         altRows('alternatecolor');
+     }
+ </script>
+{% endblock %}
