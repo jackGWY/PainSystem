@@ -121,8 +121,16 @@
            <td>{{targetInfo[4]}}</td>
          </tr>
          <tr>
+           <th>Name</th>
+           <td>{{targetInfo[1]}}</td>
+         </tr>
+         <tr>
            <th>Gene name</th>
            <td>{{targetInfo[5]}}</td>
+         </tr>
+         <tr>
+           <th>Definition</th>
+           <td>{{targetInfo[6]}}</td>
          </tr>
          <tr>
            <th>AA seq</th>
@@ -132,6 +140,7 @@
            <th>NT seq</th>
            <td>{{targetInfo[8]}}</td>
          </tr>
+
          <tr>
            <th>Pathway</th>
            {% if targetInfo[3] == "None"%}
@@ -147,6 +156,15 @@
               </ul>
               </td>
            {%endif%}
+         </tr>
+
+         <tr>
+           <th>External Link</th>
+           {% if targetInfo[0] == "None"%}
+           <td></td>
+           {%else%}
+           <td><a href="{{targetInfo[0]}}">{{targetInfo[0]}}</a></td>
+           {% endif %}
          </tr>
        </table>
      </div>
