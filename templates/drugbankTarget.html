@@ -115,15 +115,15 @@
      </style>
 
     <div>
-      <div><h3>targets</h3></div>
+      <div><h3>target list</h3></div>
       <div>
         <div>
           <div>
             
-            <table>
+            <table >
               <tr>
                 <td>
-              <table>
+              <table class="gridtable">
                 {% for drugbankTarget in drugbankTargetList %}
                 <tr><td><a href="drugbankTargetInfo?drugbankTarget={{drugbankTarget[0]}}">{{drugbankTarget[0]}}</a></td></tr>
                 {%endfor%}

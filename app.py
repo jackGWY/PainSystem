@@ -214,7 +214,9 @@ def targets():
     sql_target = 'SELECT * FROM drugbank_target'
     cur.execute(sql_target)
     drugbankTargetList=cur.fetchall()
-    return render_template('drugbankTarget.html',drugbankTargetList=drugbankTargetList)
+    len_list=len(drugbankTargetList)
+    item_len=(int)(len_list/2)
+    return render_template('drugbankTarget.html',drugbankTargetList=drugbankTargetList,item_len=item_len)
 
 @app.route('/drugbankTargetInfo',methods=["get"])
 def drugbankTargetInfo():
