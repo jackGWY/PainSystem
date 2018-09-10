@@ -273,7 +273,7 @@ def diseasePathway():
 def pai():
     return render_template('pai.html')
 
-@app.route('/drugbankInfomation?drugbank_id=<drugbank_id>')
+#@app.route('/PainDatabase/drugbankInfomation?drugbank_id=<drugbank_id>')
 def drugbankInfomation(drugbank_id):
     #drugbank_id=drugbank_id
     print("drugbank_id:",drugbank_id)
@@ -396,7 +396,7 @@ def search():
     if drugbankInfo != None:
         drugbank_id=drugbankInfo[1]
         #return render_template('drugbankInfomation.html',drugbank_id=drugbank_id)
-        return redirect(url_for('drugbankInfomation', drugbank_id=drugbank_id))
+        return drugbankInfomation(drugbank_id)
     #drugbank_name 查找druginfo
     cur_drugbank_name = conn.cursor()
     sql_drugbank_name="select * from drugbank where drugbank_Name LIKE '%s'" %args
@@ -405,7 +405,7 @@ def search():
     print("drugbankInfo2:",drugbankInfo2)
     if drugbankInfo2 != None:
         drugbank_id=drugbankInfo2[1]
-        return redirect(url_for('drugbankInfomation', drugbank_id=drugbank_id))
+        return drugbankInfomation(drugbank_id)
     #cas number 查找drugINfo
     cur_cas = conn.cursor()
     sql_cas="select * from drugbank where CAS_number LIKE '%s'" %args
@@ -414,7 +414,7 @@ def search():
     print("drugbankInfo3:",drugbankInfo3)
     if drugbankInfo3 != None:
         drugbank_id=drugbankInfo3[1]
-        return redirect(url_for('drugbankInfomation', drugbank_id=drugbank_id))
+        return drugbankInfomation(drugbank_id)
     #kegg id 查找 drugINfo
     cur_kegg_id = conn.cursor()
     sql_kegg_id="select * from drugbank where KEGG_Drug LIKE '%s'" %args
@@ -423,7 +423,7 @@ def search():
     print("drugbankInfo4:",drugbankInfo4)
     if drugbankInfo4 != None:
         drugbank_id=drugbankInfo4[1]
-        return redirect(url_for('drugbankInfomation', drugbank_id=drugbank_id))
+        return drugbankInfomation(drugbank_id)
     #sideName 查找 sideInfo
     cur_side_name = conn.cursor()
     sql_side_name='select * from sider_effect where sideeffect_name LIKE "%s"' %args
