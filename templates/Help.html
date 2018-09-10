@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}pain{% endblock %}
+
+{% block page_content %}
+
+    <div style="">
+        <div >
+        <p></p>
+        <h2>Help Document</h2>
+        <p></p>
+        <hr>
+        <div style="margin-bottom: 30px;">
+            <p style="background:#C0C0C0;font-size:25px;">About PainDatabase</p>
+        </div>
+        <p style="font-size:18px;text-align: justify;text-justify:inter-ideograph;margin-bottom: 30px;">
+            PainDatabase is a database system for pain-related drug infomation researchers. This database integrates some of the pain-related information of the drug,target,pathways,diseases,sideeffects. The basic data for drugs and target proteins are derived from <a href="https://www.drugbank.ca/drugs">DrugBank<a/>,the basic data of sideeffect from <a href="http://sideeffects.embl.de/se/">SIDER</a>, and the basic data for the pathway and disease is from <a href="https://www.genome.jp/kegg/drug/">KEGG</a>.
+        </p>
+        <br>
+        <p style="font-size:25px;text-align: justify;text-justify:inter-ideograph;margin-bottom: 20px;">How to Search</p>
+        <p style="font-size:18px;text-align: justify;text-justify:inter-ideograph;margin-bottom: 30px;">
+            PainDatabase supply the searching function, you can enter the keywords in the input field and click search button on navigation bar. Now, the website supplies drug name,drug Accession Number, CAS number,sideeffect name,target name,target entry, disease name,KEGG Entry,and pathway name fuzzy searching. For example: Enter 'Etodolac' in the input field and click search button, the records of durg  will be shown :
+        </p>
+        </div>
+        <div>
+            <img src="/static/pic_index/example.png"; style="width: 600px;height: 400px;margin-left: 100px;">
+        </div>
+
+    </div>
+           
+           
+
+{% endblock %}

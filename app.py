@@ -499,6 +499,9 @@ def search():
     else:
         return render_template('NotFound.html')
 
+@app.route('/Help')
+def Help():
+    return render_template('Help.html')
 
 if __name__ == '__main__':
     #getDrugList()

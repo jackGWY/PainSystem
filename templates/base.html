@@ -1,27 +1,9 @@
 {% extends "bootstrap/base.html"  %}
 {% block title %}Flask{% endblock %}
 {% block navbar %}
-<div class="navbar navbar-inverse" role="navigation">
+<div class="navbar navbar-inverse" role="navigation" style="background: #3C3C3C">
     <div class="container">
-        <!-- <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="/">Pain database</a>
-        </div> -->
-        <!-- <div class="nav-collapse collapse">
-                            <ul class="nav">
-                                <li><a href="/">pathological pain</a></li>
-                                <li><a href="/">physiological pain</a></li>
-                                <li><a href="/">4 Menus</a></li>
-                                <li><a href="/">5 Menus</a></li>
-                                <li><a href="/">Styles</a></li>
-                                <li><a href="/">Colors</a></li>
-                            </ul>
-        </div><!--/.nav-collapse --> -->
+        
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 <li><a href="/">Home</a></li>
@@ -34,12 +16,15 @@
                 <li><a href="/Disease">Disease</a></li>
                 <!-- <li><a href="/pai">chart</a></li> -->
                 <li>
-                    <div class="searchbar">
+                    <div class="searchbar" style="margin-top: 10px;">
                         <form action="/search" method="POST">
                             <input type="text" name="username">
                             <input type="submit" value="search">
                         </form>
                     </div>
+                </li>
+                <li style="margin-left: 300px;">
+                    <a href="/Help">Help</a>
                 </li>
 
             </ul>
