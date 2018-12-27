@@ -1,30 +1,37 @@
 {% extends "bootstrap/base.html"  %}
 {% block title %}Flask{% endblock %}
 {% block navbar %}
-<div class="navbar navbar-inverse" role="navigation" style="background: #3C3C3C">
+
+<div class="navbar navbar-inverse" role="navigation" style="background: white">
     <div class="container">
         
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li><a href="/">Home</a></li>
-                <li><a href="/drug">Drug</a></li>
-                <li><a href="/targets">targets</a></li>
-                <li>
-                    <a href="/sideeffects">sideeffect</a>
+                <style>
+a { color:#3C3C3C; transition:0.5s; }
+a:hover { color:blue; }
+</style>
+                <li><img src="/static/pic_index/logo.png" style="width: 50px;height: 50px;margin-right: 40px;"></li>
+                <li style=""><a href="/" style="color:#3C3C3C;font-size: 18px;">Home</a></li>
+                <li style=""><a href="/drug" style="color:#3C3C3C;font-size: 18px;">Drug</a></li>
+                <li style="font-size: 18px;"><a href="/targets" style="color:#3C3C3C;">Targets</a></li>
+                <li style="font-size: 18px;">
+                    <a href="/sideeffects" style="color:#3C3C3C;">Sideeffect</a>
                 </li>
-                <li><a href="/pathway">pathway</a></li>
-                <li><a href="/Disease">Disease</a></li>
+                <li style="font-size: 18px;"><a href="/pathway" style="color:#3C3C3C;">Pathway</a></li>
+                <li style="font-size: 18px;"><a href="/Disease" style="color:#3C3C3C;">Disease</a></li>
+
+                 <li style="font-size: 18px;">
+                    <a href="/Help" style="color:#3C3C3C;">Help</a>
+                </li>
                 <!-- <li><a href="/pai">chart</a></li> -->
                 <li>
                     <div class="searchbar" style="margin-top: 10px;">
-                        <form action="/search" method="POST">
+                        <form action="/search" method="POST" style="">
                             <input type="text" name="username">
-                            <input type="submit" value="search">
+                            <input type="submit" value="search" style="background: #FF9966;border-radius: 5px;" >
                         </form>
                     </div>
-                </li>
-                <li style="margin-left: 300px;">
-                    <a href="/Help">Help</a>
                 </li>
 
             </ul>

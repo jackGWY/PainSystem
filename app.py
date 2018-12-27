@@ -13,7 +13,7 @@ def index():
     return render_template('index.html')
 
 def getConnection():
-    conn = pymysql.connect(host='127.0.0.1', user='root', password='123456', db='paindatabase', charset='utf8')
+    conn = pymysql.connect(host='127.0.0.1', user='root', password='421421', db='paindatabase', charset='utf8')
     return conn
 
 @app.route('/drug')
